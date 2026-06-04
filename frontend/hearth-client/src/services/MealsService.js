@@ -1,6 +1,9 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:5253/api'
+// const API_BASE_URL = 'http://localhost:5253/api'
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  'http://localhost:5253/api'
 
 const mealsApi = axios.create({
   baseURL: API_BASE_URL,
