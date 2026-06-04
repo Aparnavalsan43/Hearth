@@ -940,7 +940,7 @@ function Dashboard({ page = 'Overview' }) {
             <div className="user-menu">
               <button className="header-profile" type="button" onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}>
                 <span>{firstName.slice(0, 1).toUpperCase()}</span>
-                <div>
+                <div className="profile-text">
                   <strong>{firstName}</strong>
                   <small>{user?.email}</small>
                 </div>
@@ -974,10 +974,10 @@ function Dashboard({ page = 'Overview' }) {
                     <span>{pendingReminders} {pendingReminders === 1 ? 'reminder' : 'reminders'}</span>
                   </div>
                 </div>
-                <div className="hero-priority-badge">
+                {/* <div className="hero-priority-badge">
                   <span>{todaysPriorities.length}</span>
                   <p>priorities today</p>
-                </div>
+                </div> */}
               </section>
 
               <section className="overview-stat-grid" aria-label="Household modules">
