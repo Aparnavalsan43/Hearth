@@ -5,7 +5,7 @@ function StatCard({ accent = 'var(--brand)', chartValue = 64, className = '', de
     <motion.article
       className={`summary-card premium-stat ${className}`.trim()}
       style={{ '--card-accent': accent }}
-      whileHover={{ y: -4, scale: 1.01 }}
+      whileHover={{ scale: 1.01 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
     >
       <div className="stat-icon">{Icon && <Icon />}</div>

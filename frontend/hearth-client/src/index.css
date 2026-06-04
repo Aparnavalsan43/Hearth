@@ -56,6 +56,13 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 :root[data-animations='false'] *,
 :root[data-animations='false'] *::before,
 :root[data-animations='false'] *::after {

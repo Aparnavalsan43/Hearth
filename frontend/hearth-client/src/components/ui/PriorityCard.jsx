@@ -8,7 +8,7 @@ function PriorityCard({ isFeatured = false, item, onClick }) {
       className={isFeatured ? 'priority-row featured' : 'priority-row'}
       type="button"
       onClick={onClick}
-      whileHover={{ y: -2, scale: 1.005 }}
+      whileHover={{ scale: 1.005 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
     >

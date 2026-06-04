@@ -974,11 +974,10 @@ function Dashboard({ page = 'Overview' }) {
                     <span>{pendingReminders} {pendingReminders === 1 ? 'reminder' : 'reminders'}</span>
                   </div>
                 </div>
-                {/* <div className="hero-priority-badge">
-                  <FiZap />
+                <div className="hero-priority-badge">
                   <span>{todaysPriorities.length}</span>
                   <p>priorities today</p>
-                </div> */}
+                </div>
               </section>
 
               <section className="overview-stat-grid" aria-label="Household modules">

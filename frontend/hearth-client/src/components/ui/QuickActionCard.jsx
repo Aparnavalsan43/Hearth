@@ -7,7 +7,7 @@ function QuickActionCard({ accent = 'var(--brand)', icon: Icon, label, onClick }
       style={{ '--action-accent': accent }}
       type="button"
       onClick={onClick}
-      whileHover={{ y: -3, scale: 1.01 }}
+      whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
     >
