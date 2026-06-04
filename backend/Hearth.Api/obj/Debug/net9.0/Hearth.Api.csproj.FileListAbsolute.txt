@@ -139,3 +139,4 @@
 /Users/azi/Hearth/backend/Hearth.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 /Users/azi/Hearth/backend/Hearth.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
 /Users/azi/Hearth/backend/Hearth.Api/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll
+/Users/azi/Hearth/backend/Hearth.Api/obj/Debug/net9.0/Hearth.Api.sourcelink.json
