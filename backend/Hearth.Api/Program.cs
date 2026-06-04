@@ -16,7 +16,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "https://hearth-three-psi.vercel.app")
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
