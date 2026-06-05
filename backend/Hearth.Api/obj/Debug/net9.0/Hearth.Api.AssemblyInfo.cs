@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Hearth.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1feb047f8820e49a2f260498d207fdbbffac11da")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f800779de3f0eac103c409c4669a3778c7e76c09")]
 [assembly: System.Reflection.AssemblyProductAttribute("Hearth.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Hearth.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

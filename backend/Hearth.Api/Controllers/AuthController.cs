@@ -13,11 +13,19 @@ public class AuthController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly JwtService _jwtService;
+    private readonly IEmailService _emailService;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(ApplicationDbContext context, JwtService jwtService)
+    public AuthController(
+        ApplicationDbContext context,
+        JwtService jwtService,
+        IEmailService emailService,
+        ILogger<AuthController> logger)
     {
         _context = context;
         _jwtService = jwtService;
+        _emailService = emailService;
+        _logger = logger;
     }
 
     [HttpPost("register")]
@@ -54,6 +62,18 @@ public class AuthController : ControllerBase
 
         _context.Notifications.Add(notification);
         await _context.SaveChangesAsync();
+
+        try
+        {
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "Welcome to Hearth",
+                "Thank you for creating your Hearth account.");
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Failed to send welcome email to {Email}", user.Email);
+        }
 
         return Ok("Registration successful.");
     }
