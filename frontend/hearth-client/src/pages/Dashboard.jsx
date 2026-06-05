@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import {
   FiBell,
   FiChevronDown,
@@ -609,9 +610,11 @@ function Dashboard({ page = 'Overview' }) {
       await BillsService.createBill(newBill)
       setBillForm(initialBillForm)
       await loadBills()
+      toast.success('Bill created successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setBillsError('Could not create bill. Please check the form and try again.')
+      toast.error('Could not create bill. Please try again.')
     } finally {
       setIsSubmittingBill(false)
     }
@@ -633,9 +636,11 @@ function Dashboard({ page = 'Overview' }) {
       await RemindersService.createReminder(newReminder)
       setReminderForm(initialReminderForm)
       await loadReminders()
+      toast.success('Reminder created successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setRemindersError('Could not create reminder. Please check the form and try again.')
+      toast.error('Could not create reminder. Please try again.')
     } finally {
       setIsSubmittingReminder(false)
     }
@@ -656,9 +661,11 @@ function Dashboard({ page = 'Overview' }) {
       await MealsService.createMeal(newMeal)
       setMealForm(initialMealForm)
       await loadMeals()
+      toast.success('Meal added successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setMealsError('Could not create meal. Please check the form and try again.')
+      toast.error('Could not add meal. Please try again.')
     } finally {
       setIsSubmittingMeal(false)
     }
@@ -680,9 +687,11 @@ function Dashboard({ page = 'Overview' }) {
       await ShoppingService.createShoppingItem(newShoppingItem)
       setShoppingForm(initialShoppingForm)
       await loadShoppingItems()
+      toast.success('Shopping item added successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setShoppingError('Could not create shopping item. Please check the form and try again.')
+      toast.error('Could not add shopping item. Please try again.')
     } finally {
       setIsSubmittingShopping(false)
     }
@@ -705,9 +714,11 @@ function Dashboard({ page = 'Overview' }) {
       await ChoresService.createChore(newChore)
       setChoreForm(initialChoreForm)
       await loadChores()
+      toast.success('Chore created successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setChoresError('Could not create chore. Please check the form and try again.')
+      toast.error('Could not create chore. Please try again.')
     } finally {
       setIsSubmittingChore(false)
     }
@@ -719,9 +730,11 @@ function Dashboard({ page = 'Overview' }) {
     try {
       await BillsService.deleteBill(id)
       await loadBills()
+      toast.success('Bill deleted successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setBillsError('Could not delete bill. Please try again.')
+      toast.error('Could not delete bill. Please try again.')
     }
   }
 
@@ -731,9 +744,11 @@ function Dashboard({ page = 'Overview' }) {
     try {
       await RemindersService.deleteReminder(id)
       await loadReminders()
+      toast.success('Reminder deleted successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setRemindersError('Could not delete reminder. Please try again.')
+      toast.error('Could not delete reminder. Please try again.')
     }
   }
 
@@ -743,9 +758,11 @@ function Dashboard({ page = 'Overview' }) {
     try {
       await MealsService.deleteMeal(id)
       await loadMeals()
+      toast.success('Meal deleted successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setMealsError('Could not delete meal. Please try again.')
+      toast.error('Could not delete meal. Please try again.')
     }
   }
 
@@ -755,9 +772,11 @@ function Dashboard({ page = 'Overview' }) {
     try {
       await ShoppingService.deleteShoppingItem(id)
       await loadShoppingItems()
+      toast.success('Shopping item deleted successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setShoppingError('Could not delete shopping item. Please try again.')
+      toast.error('Could not delete shopping item. Please try again.')
     }
   }
 
@@ -767,9 +786,11 @@ function Dashboard({ page = 'Overview' }) {
     try {
       await ChoresService.deleteChore(id)
       await loadChores()
+      toast.success('Chore deleted successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setChoresError('Could not delete chore. Please try again.')
+      toast.error('Could not delete chore. Please try again.')
     }
   }
 
@@ -784,9 +805,11 @@ function Dashboard({ page = 'Overview' }) {
     try {
       await BillsService.updateBill(bill.id, updatedBill)
       await loadBills()
+      toast.success('Bill updated successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setBillsError('Could not update bill status. Please try again.')
+      toast.error('Could not update bill. Please try again.')
     }
   }
 
@@ -801,9 +824,11 @@ function Dashboard({ page = 'Overview' }) {
     try {
       await RemindersService.updateReminder(reminder.id, updatedReminder)
       await loadReminders()
+      toast.success('Reminder updated successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setRemindersError('Could not update reminder status. Please try again.')
+      toast.error('Could not update reminder. Please try again.')
     }
   }
 
@@ -818,9 +843,11 @@ function Dashboard({ page = 'Overview' }) {
     try {
       await ShoppingService.updateShoppingItem(item.id, updatedItem)
       await loadShoppingItems()
+      toast.success('Shopping item updated successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setShoppingError('Could not update shopping item status. Please try again.')
+      toast.error('Could not update shopping item. Please try again.')
     }
   }
 
@@ -835,9 +862,11 @@ function Dashboard({ page = 'Overview' }) {
     try {
       await ChoresService.updateChore(chore.id, updatedChore)
       await loadChores()
+      toast.success('Chore updated successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setChoresError('Could not update chore status. Please try again.')
+      toast.error('Could not update chore. Please try again.')
     }
   }
 

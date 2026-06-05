@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 import './App.css'
 import { AuthProvider } from './context/AuthContext'
 import Bills from './pages/Bills'
@@ -15,6 +16,34 @@ import ProtectedRoute from './routes/ProtectedRoute'
 function App() {
   return (
     <AuthProvider>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3200,
+          style: {
+            background: 'rgba(255, 255, 255, 0.94)',
+            color: '#0f172a',
+            border: '1px solid rgba(15, 23, 42, 0.08)',
+            borderRadius: '16px',
+            boxShadow: '0 10px 30px rgba(15, 23, 42, 0.12)',
+            backdropFilter: 'blur(14px)',
+            fontWeight: 700,
+            padding: '12px 14px',
+          },
+          success: {
+            iconTheme: {
+              primary: '#10B981',
+              secondary: '#ffffff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#EF4444',
+              secondary: '#ffffff',
+            },
+          },
+        }}
+      />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />

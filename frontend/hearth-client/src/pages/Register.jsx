@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import FormField from '../components/FormField'
 import AuthLayout from '../layouts/AuthLayout'
@@ -62,10 +63,13 @@ function Register() {
 
     try {
       await AuthService.register(requestBody)
+      toast.success('Registration successful. Please log in.')
       navigate('/login')
     } catch (error) {
       console.error(error.response?.data || error.message)
-      setError(getErrorMessage(error))
+      const message = getErrorMessage(error)
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }

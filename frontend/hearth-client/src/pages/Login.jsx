@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import FormField from '../components/FormField'
 import { useAuth } from '../context/useAuth'
@@ -27,9 +28,12 @@ function Login() {
     try {
       const response = await AuthService.login(formData)
       login(response.data)
+      toast.success('Login successful. Welcome back.')
       navigate('/dashboard')
     } catch {
-      setError('Invalid email or password.')
+      const message = 'Invalid email or password.'
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
