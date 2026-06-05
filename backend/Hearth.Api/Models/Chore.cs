@@ -10,6 +10,10 @@ public class Chore
 
     public string AssignedTo { get; set; } = string.Empty;
 
+    public int? AssignedUserId { get; set; }
+
+    public string? AssignedUserEmail { get; set; }
+
     public string Category { get; set; } = string.Empty;
 
     public DateTime DueDate { get; set; }

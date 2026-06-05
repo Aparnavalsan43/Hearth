@@ -1520,6 +1520,52 @@
   gap: 10px;
 }
 
+.member-form {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.member-list {
+  display: grid;
+  gap: 10px;
+}
+
+.member-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--soft);
+  padding: 12px;
+}
+
+.member-row div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.member-row strong,
+.member-row small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.member-row strong {
+  color: var(--text);
+  font-weight: 900;
+}
+
+.member-row small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+
 .settings-toggle-row {
   min-height: 64px;
   display: grid;
@@ -1981,6 +2027,10 @@
     right: auto;
     left: 0;
     width: 100%;
+  }
+
+  .member-row {
+    grid-template-columns: 1fr;
   }
 
   .header-profile .profile-text small {

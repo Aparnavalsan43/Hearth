@@ -29,6 +29,7 @@ import { useAuth } from '../context/useAuth'
 import AppLayout from '../layouts/AppLayout'
 import BillsService from '../services/BillsService'
 import ChoresService from '../services/ChoresService'
+import HouseholdMembersService from '../services/HouseholdMembersService'
 import MealsService from '../services/MealsService'
 import NotificationsService from '../services/NotificationsService'
 import RemindersService from '../services/RemindersService'
@@ -65,9 +66,16 @@ const initialShoppingForm = {
 const initialChoreForm = {
   title: '',
   assignedTo: '',
+  assignedUserEmail: '',
   category: 'Cleaning',
   dueDate: '',
   isCompleted: false,
+}
+
+const initialHouseholdMemberForm = {
+  fullName: '',
+  email: '',
+  role: 'Member',
 }
 
 const tabs = [
@@ -180,26 +188,31 @@ function Dashboard({ page = 'Overview' }) {
   const [meals, setMeals] = useState([])
   const [shoppingItems, setShoppingItems] = useState([])
   const [chores, setChores] = useState([])
+  const [householdMembers, setHouseholdMembers] = useState([])
   const [billForm, setBillForm] = useState(initialBillForm)
   const [reminderForm, setReminderForm] = useState(initialReminderForm)
   const [mealForm, setMealForm] = useState(initialMealForm)
   const [shoppingForm, setShoppingForm] = useState(initialShoppingForm)
   const [choreForm, setChoreForm] = useState(initialChoreForm)
+  const [householdMemberForm, setHouseholdMemberForm] = useState(initialHouseholdMemberForm)
   const [isLoadingBills, setIsLoadingBills] = useState(true)
   const [isLoadingReminders, setIsLoadingReminders] = useState(true)
   const [isLoadingMeals, setIsLoadingMeals] = useState(true)
   const [isLoadingShopping, setIsLoadingShopping] = useState(true)
   const [isLoadingChores, setIsLoadingChores] = useState(true)
+  const [isLoadingHouseholdMembers, setIsLoadingHouseholdMembers] = useState(true)
   const [isSubmittingBill, setIsSubmittingBill] = useState(false)
   const [isSubmittingReminder, setIsSubmittingReminder] = useState(false)
   const [isSubmittingMeal, setIsSubmittingMeal] = useState(false)
   const [isSubmittingShopping, setIsSubmittingShopping] = useState(false)
   const [isSubmittingChore, setIsSubmittingChore] = useState(false)
+  const [isSubmittingHouseholdMember, setIsSubmittingHouseholdMember] = useState(false)
   const [billsError, setBillsError] = useState('')
   const [remindersError, setRemindersError] = useState('')
   const [mealsError, setMealsError] = useState('')
   const [shoppingError, setShoppingError] = useState('')
   const [choresError, setChoresError] = useState('')
+  const [householdMembersError, setHouseholdMembersError] = useState('')
 
   useEffect(() => {
     document.documentElement.dataset.theme = isDarkMode ? 'dark' : 'light'
@@ -506,6 +519,21 @@ function Dashboard({ page = 'Overview' }) {
     }
   }
 
+  const loadHouseholdMembers = async () => {
+    setHouseholdMembersError('')
+    setIsLoadingHouseholdMembers(true)
+
+    try {
+      const response = await HouseholdMembersService.getHouseholdMembers()
+      setHouseholdMembers(response.data)
+    } catch (error) {
+      console.error(error.response?.data || error.message)
+      setHouseholdMembersError('Could not load household members. Please try again.')
+    } finally {
+      setIsLoadingHouseholdMembers(false)
+    }
+  }
+
   const loadNotifications = async ({ silent = false } = {}) => {
     setIsLoadingNotifications(true)
 
@@ -533,12 +561,13 @@ function Dashboard({ page = 'Overview' }) {
 
     const loadDashboard = async () => {
       try {
-        const [billsResponse, remindersResponse, mealsResponse, shoppingResponse, choresResponse] = await Promise.all([
+        const [billsResponse, remindersResponse, mealsResponse, shoppingResponse, choresResponse, householdMembersResponse] = await Promise.all([
           BillsService.getBills(),
           RemindersService.getReminders(),
           MealsService.getMeals(),
           ShoppingService.getShoppingItems(),
           ChoresService.getChores(),
+          HouseholdMembersService.getHouseholdMembers(),
         ])
 
         if (isMounted) {
@@ -547,6 +576,7 @@ function Dashboard({ page = 'Overview' }) {
           setMeals(mealsResponse.data)
           setShoppingItems(shoppingResponse.data)
           setChores(choresResponse.data)
+          setHouseholdMembers(householdMembersResponse.data)
         }
       } catch (error) {
         console.error(error.response?.data || error.message)
@@ -557,6 +587,7 @@ function Dashboard({ page = 'Overview' }) {
           setMealsError('Could not load dashboard data. Please try again.')
           setShoppingError('Could not load dashboard data. Please try again.')
           setChoresError('Could not load dashboard data. Please try again.')
+          setHouseholdMembersError('Could not load household members. Please try again.')
         }
       } finally {
         if (isMounted) {
@@ -565,6 +596,7 @@ function Dashboard({ page = 'Overview' }) {
           setIsLoadingMeals(false)
           setIsLoadingShopping(false)
           setIsLoadingChores(false)
+          setIsLoadingHouseholdMembers(false)
         }
       }
     }
@@ -666,9 +698,30 @@ function Dashboard({ page = 'Overview' }) {
   const handleChoreFormChange = (event) => {
     const { name, value, checked, type } = event.target
 
+    if (name === 'assignedUserEmail') {
+      const selectedMember = householdMembers.find((member) => member.email === value)
+
+      setChoreForm({
+        ...choreForm,
+        assignedTo: selectedMember?.fullName || '',
+        assignedUserEmail: value,
+      })
+
+      return
+    }
+
     setChoreForm({
       ...choreForm,
       [name]: type === 'checkbox' ? checked : value,
+    })
+  }
+
+  const handleHouseholdMemberFormChange = (event) => {
+    const { name, value } = event.target
+
+    setHouseholdMemberForm({
+      ...householdMemberForm,
+      [name]: value,
     })
   }
 
@@ -784,6 +837,7 @@ function Dashboard({ page = 'Overview' }) {
     const newChore = {
       title: choreForm.title,
       assignedTo: choreForm.assignedTo,
+      assignedUserEmail: choreForm.assignedUserEmail,
       category: choreForm.category,
       dueDate: choreForm.dueDate,
       isCompleted: choreForm.isCompleted,
@@ -793,13 +847,53 @@ function Dashboard({ page = 'Overview' }) {
       await ChoresService.createChore(newChore)
       setChoreForm(initialChoreForm)
       await loadChores()
-      toast.success('Chore created successfully.')
+      await loadNotifications({ silent: true })
+      toast.success('Chore assigned successfully.')
     } catch (error) {
       console.error(error.response?.data || error.message)
       setChoresError('Could not create chore. Please check the form and try again.')
       toast.error('Could not create chore. Please try again.')
     } finally {
       setIsSubmittingChore(false)
+    }
+  }
+
+  const handleCreateHouseholdMember = async (event) => {
+    event.preventDefault()
+    setHouseholdMembersError('')
+    setIsSubmittingHouseholdMember(true)
+
+    const newHouseholdMember = {
+      fullName: householdMemberForm.fullName,
+      email: householdMemberForm.email,
+      role: householdMemberForm.role,
+    }
+
+    try {
+      await HouseholdMembersService.createHouseholdMember(newHouseholdMember)
+      setHouseholdMemberForm(initialHouseholdMemberForm)
+      await loadHouseholdMembers()
+      toast.success('Household member added successfully.')
+    } catch (error) {
+      console.error(error.response?.data || error.message)
+      setHouseholdMembersError('Could not add household member. Please try again.')
+      toast.error('Could not add household member. Please try again.')
+    } finally {
+      setIsSubmittingHouseholdMember(false)
+    }
+  }
+
+  const handleDeleteHouseholdMember = async (id) => {
+    setHouseholdMembersError('')
+
+    try {
+      await HouseholdMembersService.deleteHouseholdMember(id)
+      await loadHouseholdMembers()
+      toast.success('Household member deleted successfully.')
+    } catch (error) {
+      console.error(error.response?.data || error.message)
+      setHouseholdMembersError('Could not delete household member. Please try again.')
+      toast.error('Could not delete household member. Please try again.')
     }
   }
 
@@ -1560,9 +1654,23 @@ function Dashboard({ page = 'Overview' }) {
                       <span>Title</span>
                       <input id="choreTitle" name="title" value={choreForm.title} onChange={handleChoreFormChange} required />
                     </label>
-                    <label className="form-field" htmlFor="assignedTo">
+                    <label className="form-field" htmlFor="assignedUserEmail">
                       <span>Assigned To</span>
-                      <input id="assignedTo" name="assignedTo" value={choreForm.assignedTo} onChange={handleChoreFormChange} required />
+                      <select
+                        id="assignedUserEmail"
+                        name="assignedUserEmail"
+                        value={choreForm.assignedUserEmail}
+                        onChange={handleChoreFormChange}
+                        disabled={householdMembers.length === 0}
+                        required
+                      >
+                        <option value="">Select household member</option>
+                        {householdMembers.map((member) => (
+                          <option key={member.id} value={member.email}>
+                            {member.fullName} · {member.email}
+                          </option>
+                        ))}
+                      </select>
                     </label>
                     <label className="form-field" htmlFor="choreCategory">
                       <span>Category</span>
@@ -1585,6 +1693,9 @@ function Dashboard({ page = 'Overview' }) {
                     <input id="choreIsCompleted" name="isCompleted" type="checkbox" checked={choreForm.isCompleted} onChange={handleChoreFormChange} />
                     <span>Mark as completed</span>
                   </label>
+                  {householdMembers.length === 0 && (
+                    <p className="empty-state">Add household members in Settings before assigning chores.</p>
+                  )}
                   <button className="primary-button" type="submit" disabled={isSubmittingChore}>
                     {isSubmittingChore ? 'Creating...' : 'Create Chore'}
                   </button>
@@ -1611,7 +1722,7 @@ function Dashboard({ page = 'Overview' }) {
                         <div className="row-main">
                           <h4>{chore.title}</h4>
                           <p>
-                            {chore.assignedTo} · {chore.category} · Due {formatDate(chore.dueDate)}
+                            {chore.assignedTo || chore.assignedUserEmail || 'Unassigned'}{chore.assignedUserEmail ? ` · ${chore.assignedUserEmail}` : ''} · {chore.category} · Due {formatDate(chore.dueDate)}
                           </p>
                         </div>
                         <span className={chore.isCompleted ? 'status paid' : 'status unpaid'}>
@@ -1654,6 +1765,59 @@ function Dashboard({ page = 'Overview' }) {
                     <p>{user?.email}</p>
                     <span>{memberSince}</span>
                   </div>
+                </section>
+
+                <section className="list-card settings-card">
+                  <div className="list-card-header">
+                    <div>
+                      <h3>Household Members</h3>
+                      <p>Add real people so chores can be assigned with notifications.</p>
+                    </div>
+                    <span>{householdMembers.length} total</span>
+                  </div>
+                  {householdMembersError && <div className="form-alert">{householdMembersError}</div>}
+                  <form className="member-form" onSubmit={handleCreateHouseholdMember}>
+                    <div className="form-grid">
+                      <label className="form-field" htmlFor="memberFullName">
+                        <span>Full Name</span>
+                        <input id="memberFullName" name="fullName" value={householdMemberForm.fullName} onChange={handleHouseholdMemberFormChange} required />
+                      </label>
+                      <label className="form-field" htmlFor="memberEmail">
+                        <span>Email</span>
+                        <input id="memberEmail" name="email" type="email" value={householdMemberForm.email} onChange={handleHouseholdMemberFormChange} required />
+                      </label>
+                      <label className="form-field" htmlFor="memberRole">
+                        <span>Role</span>
+                        <select id="memberRole" name="role" value={householdMemberForm.role} onChange={handleHouseholdMemberFormChange} required>
+                          <option value="Admin">Admin</option>
+                          <option value="Member">Member</option>
+                        </select>
+                      </label>
+                    </div>
+                    <button className="primary-button" type="submit" disabled={isSubmittingHouseholdMember}>
+                      {isSubmittingHouseholdMember ? 'Adding...' : 'Add Member'}
+                    </button>
+                  </form>
+                  {isLoadingHouseholdMembers ? (
+                    <p className="empty-state">Loading household members...</p>
+                  ) : householdMembers.length === 0 ? (
+                    <p className="empty-state">No household members yet. Add someone to assign chores.</p>
+                  ) : (
+                    <div className="member-list">
+                      {householdMembers.map((member) => (
+                        <article className="member-row" key={member.id}>
+                          <div>
+                            <strong>{member.fullName}</strong>
+                            <small>{member.email}</small>
+                          </div>
+                          <span className="status neutral">{member.role}</span>
+                          <button className="danger-button" type="button" onClick={() => handleDeleteHouseholdMember(member.id)}>
+                            Delete
+                          </button>
+                        </article>
+                      ))}
+                    </div>
+                  )}
                 </section>
 
                 <section className="list-card settings-card">
