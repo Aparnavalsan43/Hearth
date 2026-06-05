@@ -73,6 +73,7 @@ public class AuthController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError(exception, "Failed to send welcome email to {Email}", user.Email);
+            Console.WriteLine(exception.ToString());
         }
 
         return Ok("Registration successful.");

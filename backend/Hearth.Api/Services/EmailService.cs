@@ -16,6 +16,10 @@ public class EmailService : IEmailService
 
     public async Task SendEmailAsync(string to, string subject, string body)
     {
+        Console.WriteLine($"Attempting to send email to {to}");
+        Console.WriteLine($"SMTP host: {_emailSettings.SmtpHost}:{_emailSettings.SmtpPort}");
+        Console.WriteLine($"SMTP from: {_emailSettings.FromName} <{_emailSettings.FromEmail}>");
+
         using var message = new MailMessage
         {
             From = new MailAddress(_emailSettings.FromEmail, _emailSettings.FromName),
@@ -33,5 +37,6 @@ public class EmailService : IEmailService
         };
 
         await smtpClient.SendMailAsync(message);
+        Console.WriteLine($"Email sent successfully to {to}");
     }
 }

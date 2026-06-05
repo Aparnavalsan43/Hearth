@@ -13,6 +13,14 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+var emailSettings = builder.Configuration.GetSection("EmailSettings").Get<EmailSettings>() ?? new EmailSettings();
+Console.WriteLine("EmailSettings loaded:");
+Console.WriteLine($"- SmtpHost: {emailSettings.SmtpHost}");
+Console.WriteLine($"- SmtpPort: {emailSettings.SmtpPort}");
+Console.WriteLine($"- SmtpUsername configured: {!string.IsNullOrWhiteSpace(emailSettings.SmtpUsername)}");
+Console.WriteLine($"- SmtpPassword configured: {!string.IsNullOrWhiteSpace(emailSettings.SmtpPassword)}");
+Console.WriteLine($"- FromEmail: {emailSettings.FromEmail}");
+Console.WriteLine($"- FromName: {emailSettings.FromName}");
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddCors(options =>
