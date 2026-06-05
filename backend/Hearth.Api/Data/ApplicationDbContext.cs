@@ -21,4 +21,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<ShoppingItem> ShoppingItems { get; set; }
 
     public DbSet<Chore> Chores { get; set; }
+
+    public DbSet<Notification> Notifications { get; set; }
 }

@@ -42,6 +42,19 @@ public class AuthController : ControllerBase
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
+        var notification = new Notification
+        {
+            UserId = user.Id,
+            Title = "Welcome to Hearth",
+            Message = "Your account has been created successfully.",
+            Type = "Registration",
+            IsRead = false,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _context.Notifications.Add(notification);
+        await _context.SaveChangesAsync();
+
         return Ok("Registration successful.");
     }
 

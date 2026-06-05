@@ -30,6 +30,7 @@ import AppLayout from '../layouts/AppLayout'
 import BillsService from '../services/BillsService'
 import ChoresService from '../services/ChoresService'
 import MealsService from '../services/MealsService'
+import NotificationsService from '../services/NotificationsService'
 import RemindersService from '../services/RemindersService'
 import ShoppingService from '../services/ShoppingService'
 
@@ -106,6 +107,19 @@ function formatDate(date) {
   }).format(new Date(date))
 }
 
+function formatNotificationTime(date) {
+  if (!date) {
+    return 'Recent'
+  }
+
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(new Date(date))
+}
+
 function isWithinNextWeek(date) {
   if (!date) {
     return false
@@ -157,6 +171,10 @@ function Dashboard({ page = 'Overview' }) {
     }
   })
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const [notifications, setNotifications] = useState([])
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0)
+  const [isLoadingNotifications, setIsLoadingNotifications] = useState(false)
   const [bills, setBills] = useState([])
   const [reminders, setReminders] = useState([])
   const [meals, setMeals] = useState([])
@@ -488,6 +506,28 @@ function Dashboard({ page = 'Overview' }) {
     }
   }
 
+  const loadNotifications = async ({ silent = false } = {}) => {
+    setIsLoadingNotifications(true)
+
+    try {
+      const [notificationsResponse, unreadCountResponse] = await Promise.all([
+        NotificationsService.getNotifications(),
+        NotificationsService.getUnreadCount(),
+      ])
+
+      setNotifications(notificationsResponse.data)
+      setUnreadNotificationCount(unreadCountResponse.data.unreadCount || 0)
+    } catch (error) {
+      console.error(error.response?.data || error.message)
+
+      if (!silent) {
+        toast.error('Could not load notifications. Please try again.')
+      }
+    } finally {
+      setIsLoadingNotifications(false)
+    }
+  }
+
   useEffect(() => {
     let isMounted = true
 
@@ -530,11 +570,50 @@ function Dashboard({ page = 'Overview' }) {
     }
 
     loadDashboard()
+    loadNotifications({ silent: true })
 
     return () => {
       isMounted = false
     }
   }, [])
+
+  const handleToggleNotifications = () => {
+    setIsNotificationsOpen(!isNotificationsOpen)
+    setIsUserMenuOpen(false)
+  }
+
+  const handleMarkNotificationAsRead = async (id) => {
+    try {
+      await NotificationsService.markAsRead(id)
+      await loadNotifications({ silent: true })
+      toast.success('Notification marked as read.')
+    } catch (error) {
+      console.error(error.response?.data || error.message)
+      toast.error('Could not update notification. Please try again.')
+    }
+  }
+
+  const handleMarkAllNotificationsAsRead = async () => {
+    try {
+      await NotificationsService.markAllAsRead()
+      await loadNotifications({ silent: true })
+      toast.success('All notifications marked as read.')
+    } catch (error) {
+      console.error(error.response?.data || error.message)
+      toast.error('Could not update notifications. Please try again.')
+    }
+  }
+
+  const handleDeleteNotification = async (id) => {
+    try {
+      await NotificationsService.deleteNotification(id)
+      await loadNotifications({ silent: true })
+      toast.success('Notification deleted.')
+    } catch (error) {
+      console.error(error.response?.data || error.message)
+      toast.error('Could not delete notification. Please try again.')
+    }
+  }
 
   const handleLogout = () => {
     logout()
@@ -962,12 +1041,75 @@ function Dashboard({ page = 'Overview' }) {
               <FiSearch />
               <input aria-label="Search Hearth" placeholder="Search bills, chores, meals..." type="search" />
             </div>
-            <button className="notification-button" type="button" aria-label="Notifications">
-              <FiBell />
-              <span>{todaysPriorities.length}</span>
-            </button>
+            <div className="notification-menu">
+              <button
+                className="notification-button"
+                type="button"
+                aria-label="Notifications"
+                aria-expanded={isNotificationsOpen}
+                onClick={handleToggleNotifications}
+              >
+                <FiBell />
+                {unreadNotificationCount > 0 && <span>{unreadNotificationCount}</span>}
+              </button>
+              {isNotificationsOpen && (
+                <div className="notification-dropdown">
+                  <div className="notification-dropdown-header">
+                    <div>
+                      <strong>Notifications</strong>
+                      <small>{unreadNotificationCount} unread</small>
+                    </div>
+                    <button type="button" onClick={handleMarkAllNotificationsAsRead} disabled={unreadNotificationCount === 0}>
+                      Mark all read
+                    </button>
+                  </div>
+
+                  <div className="notification-list">
+                    {isLoadingNotifications && <LoadingSpinner />}
+                    {!isLoadingNotifications && notifications.length === 0 && (
+                      <div className="notification-empty">
+                        <FiBell />
+                        <p>No notifications yet.</p>
+                      </div>
+                    )}
+                    {!isLoadingNotifications && notifications.slice(0, 6).map((notification) => (
+                      <article className={notification.isRead ? 'notification-item' : 'notification-item unread'} key={notification.id}>
+                        <div className="notification-icon">
+                          <FiBell />
+                        </div>
+                        <div className="notification-copy">
+                          <div>
+                            <strong>{notification.title}</strong>
+                            {!notification.isRead && <span>New</span>}
+                          </div>
+                          <p>{notification.message}</p>
+                          <small>{notification.type} · {formatNotificationTime(notification.createdAt)}</small>
+                          <div className="notification-actions">
+                            {!notification.isRead && (
+                              <button type="button" onClick={() => handleMarkNotificationAsRead(notification.id)}>
+                                Mark read
+                              </button>
+                            )}
+                            <button type="button" onClick={() => handleDeleteNotification(notification.id)}>
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="user-menu">
-              <button className="header-profile" type="button" onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}>
+              <button
+                className="header-profile"
+                type="button"
+                onClick={() => {
+                  setIsUserMenuOpen(!isUserMenuOpen)
+                  setIsNotificationsOpen(false)
+                }}
+              >
                 <span>{firstName.slice(0, 1).toUpperCase()}</span>
                 <div className="profile-text">
                   <strong>{firstName}</strong>

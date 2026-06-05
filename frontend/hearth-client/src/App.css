@@ -417,6 +417,199 @@
   font-weight: 900;
 }
 
+.notification-menu {
+  position: relative;
+  z-index: 2000;
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 2200;
+  width: min(380px, calc(100vw - 32px));
+  max-height: min(520px, calc(100vh - 120px));
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82)),
+    var(--surface-glass);
+  box-shadow: var(--shadow-strong);
+  overflow: hidden;
+  backdrop-filter: blur(18px);
+}
+
+:root[data-theme='dark'] .notification-dropdown {
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.84)),
+    var(--surface-glass);
+}
+
+.notification-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+  padding: 16px;
+}
+
+.notification-dropdown-header div {
+  display: grid;
+  gap: 2px;
+}
+
+.notification-dropdown-header strong {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.notification-dropdown-header small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.notification-dropdown-header button,
+.notification-actions button {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--soft);
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.notification-dropdown-header button:hover,
+.notification-actions button:hover {
+  border-color: color-mix(in srgb, var(--brand) 36%, var(--border));
+  color: var(--brand);
+}
+
+.notification-dropdown-header button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.notification-list {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  padding: 12px;
+  transition: all 0.25s ease;
+}
+
+.notification-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.notification-item.unread {
+  border-color: color-mix(in srgb, var(--brand) 38%, var(--border));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--brand) 10%, transparent), color-mix(in srgb, var(--secondary) 8%, transparent)),
+    color-mix(in srgb, var(--surface) 88%, transparent);
+}
+
+.notification-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand), var(--secondary));
+  color: #fff;
+}
+
+.notification-copy {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.notification-copy div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.notification-copy strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notification-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.notification-copy small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.notification-copy span {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand) 14%, transparent);
+  color: var(--brand);
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 8px;
+}
+
+.notification-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.notification-empty {
+  min-height: 140px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.notification-empty svg {
+  width: 24px;
+  height: 24px;
+  color: var(--brand);
+}
+
+.notification-empty p {
+  margin: 0;
+  font-weight: 800;
+}
+
 .user-menu {
   position: relative;
   z-index: 2000;
@@ -1778,6 +1971,16 @@
 
   .notification-button {
     height: 40px;
+  }
+
+  .notification-menu {
+    width: 100%;
+  }
+
+  .notification-dropdown {
+    right: auto;
+    left: 0;
+    width: 100%;
   }
 
   .header-profile .profile-text small {
