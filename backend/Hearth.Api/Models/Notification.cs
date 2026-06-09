@@ -1,6 +1,6 @@
 namespace Hearth.Api.Models;
 
-public class Notification
+public class Notification : BaseEntity
 {
     public int Id { get; set; }
 

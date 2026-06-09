@@ -21,6 +21,24 @@ public class BillsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Bill>>> GetBills()
     {
+
+        //  try
+        // {
+        //     var userId = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+
+        //     if (userId is null)
+        //     {
+        //         return Unauthorized();
+        //     }
+
+        //     var bills = await _context.Bills.Where(b => b.UserId == userId).ToListAsync();
+
+        //     return Ok(bills);
+        // }
+        // catch (Exception ex)
+        // {
+            
+        // }
         var bills = await _context.Bills.ToListAsync();
 
         return Ok(bills);
@@ -53,6 +71,8 @@ public class BillsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateBill(int id, Bill bill)
     {
+
+       
         if (id != bill.Id)
         {
             return BadRequest();

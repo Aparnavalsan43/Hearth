@@ -1,6 +1,6 @@
 namespace Hearth.Api.Models;
 
-public class HouseholdMember
+public class HouseholdMember : BaseEntity
 {
     public int Id { get; set; }
 
@@ -12,5 +12,5 @@ public class HouseholdMember
 
     public string Role { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    //public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

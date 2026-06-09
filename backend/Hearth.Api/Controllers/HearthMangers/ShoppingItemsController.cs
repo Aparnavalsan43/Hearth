@@ -42,7 +42,7 @@ public class ShoppingItemsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ShoppingItem>> CreateShoppingItem(ShoppingItem shoppingItem)
     {
-        shoppingItem.CreatedAt = DateTime.UtcNow;
+        shoppingItem.CreatedDate = DateTime.UtcNow;
 
         _context.ShoppingItems.Add(shoppingItem);
         await _context.SaveChangesAsync();
@@ -58,7 +58,7 @@ public class ShoppingItemsController : ControllerBase
             return BadRequest();
         }
 
-        shoppingItem.CreatedAt = DateTime.SpecifyKind(shoppingItem.CreatedAt, DateTimeKind.Utc);
+        shoppingItem.CreatedDate = DateTime.SpecifyKind(shoppingItem.CreatedDate, DateTimeKind.Utc);
 
         _context.Entry(shoppingItem).State = EntityState.Modified;
 

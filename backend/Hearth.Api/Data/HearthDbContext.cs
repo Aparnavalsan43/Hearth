@@ -25,4 +25,15 @@ public class ApplicationDbContext : DbContext
     public DbSet<Notification> Notifications { get; set; }
 
     public DbSet<HouseholdMember> HouseholdMembers { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Chore>()
+            .HasOne(chore => chore.AssignedToMember)
+            .WithMany()
+            .HasForeignKey(chore => chore.AssignedToMemberId)
+            .OnDelete(DeleteBehavior.SetNull);
+    }
 }

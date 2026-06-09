@@ -1,6 +1,6 @@
 namespace Hearth.Api.Models;
 
-public class Reminder
+public class Reminder : BaseEntity
 {
     public int Id { get; set; }
 
@@ -14,5 +14,5 @@ public class Reminder
 
     public bool IsCompleted { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    //public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

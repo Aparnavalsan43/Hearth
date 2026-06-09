@@ -1,6 +1,6 @@
 namespace Hearth.Api.Models;
 
-public class Meal
+public class Meal : BaseEntity
 {
     public int Id { get; set; }
 
@@ -12,5 +12,5 @@ public class Meal
 
     public DateTime PlannedDate { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+   // public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

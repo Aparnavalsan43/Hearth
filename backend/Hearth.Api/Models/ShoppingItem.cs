@@ -1,6 +1,6 @@
 namespace Hearth.Api.Models;
 
-public class ShoppingItem
+public class ShoppingItem : BaseEntity
 {
     public int Id { get; set; }
 
@@ -14,5 +14,5 @@ public class ShoppingItem
 
     public bool IsPurchased { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    //public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

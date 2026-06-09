@@ -1,6 +1,6 @@
 namespace Hearth.Api.Models;
 
-public class Bill
+public class Bill : BaseEntity
 {
     public int Id { get; set; }
 
@@ -16,5 +16,5 @@ public class Bill
 
     public bool IsPaid { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+   // public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

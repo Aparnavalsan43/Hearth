@@ -49,7 +49,7 @@ public class HouseholdMembersController : ControllerBase
 
         householdMember.UserId = userId.Value;
         householdMember.Email = householdMember.Email.Trim().ToLower();
-        householdMember.CreatedAt = DateTime.UtcNow;
+        householdMember.CreatedDate = DateTime.UtcNow;
 
         _context.HouseholdMembers.Add(householdMember);
         await _context.SaveChangesAsync();

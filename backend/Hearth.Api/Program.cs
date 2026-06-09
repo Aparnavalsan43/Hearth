@@ -21,8 +21,12 @@ Console.WriteLine($"- SmtpUsername configured: {!string.IsNullOrWhiteSpace(email
 Console.WriteLine($"- SmtpPassword configured: {!string.IsNullOrWhiteSpace(emailSettings.SmtpPassword)}");
 Console.WriteLine($"- FromEmail: {emailSettings.FromEmail}");
 Console.WriteLine($"- FromName: {emailSettings.FromName}");
+Console.WriteLine($"- UseTestEmail: {emailSettings.UseTestEmail}");
+Console.WriteLine($"- TestEmail: {emailSettings.TestEmail}");
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IChoreService, ChoreService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>

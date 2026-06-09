@@ -44,7 +44,7 @@ public class AuthController : ControllerBase
             FullName = registerDto.FullName,
             Email = email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
-            CreatedAt = DateTime.UtcNow
+            CreatedDate = DateTime.UtcNow
         };
 
         _context.Users.Add(user);
@@ -57,7 +57,7 @@ public class AuthController : ControllerBase
             Message = "Your account has been created successfully.",
             Type = "Registration",
             IsRead = false,
-            CreatedAt = DateTime.UtcNow
+            CreatedDate = DateTime.UtcNow
         };
 
         _context.Notifications.Add(notification);
@@ -65,10 +65,14 @@ public class AuthController : ControllerBase
 
         try
         {
+            Console.WriteLine("Registration successful. Sending welcome email...");
+
             await _emailService.SendEmailAsync(
                 user.Email,
                 "Welcome to Hearth",
                 "Thank you for creating your Hearth account.");
+
+            Console.WriteLine("Welcome email sent successfully.");
         }
         catch (Exception exception)
         {

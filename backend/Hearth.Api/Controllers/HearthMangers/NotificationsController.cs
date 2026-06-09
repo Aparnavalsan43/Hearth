@@ -31,7 +31,7 @@ public class NotificationsController : ControllerBase
 
         var notifications = await _context.Notifications
             .Where(notification => notification.UserId == userId)
-            .OrderByDescending(notification => notification.CreatedAt)
+            .OrderByDescending(notification => notification.CreatedDate)
             .ToListAsync();
 
         return Ok(notifications);

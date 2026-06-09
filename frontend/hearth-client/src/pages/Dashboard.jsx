@@ -65,8 +65,7 @@ const initialShoppingForm = {
 
 const initialChoreForm = {
   title: '',
-  assignedTo: '',
-  assignedUserEmail: '',
+  assignedToMemberId: '',
   category: 'Cleaning',
   dueDate: '',
   isCompleted: false,
@@ -381,7 +380,7 @@ function Dashboard({ page = 'Overview' }) {
       dueDate: formatDate(chore.dueDate),
       icon: FiUsers,
       label: chore.title,
-      meta: chore.assignedTo,
+      meta: chore.assignedMemberName || chore.assignedTo || 'Unassigned',
       priority: isPastDue(chore.dueDate) ? 1 : 3,
       tab: 'Chores',
       tone: isPastDue(chore.dueDate) ? 'danger' : 'success',
@@ -698,18 +697,6 @@ function Dashboard({ page = 'Overview' }) {
   const handleChoreFormChange = (event) => {
     const { name, value, checked, type } = event.target
 
-    if (name === 'assignedUserEmail') {
-      const selectedMember = householdMembers.find((member) => member.email === value)
-
-      setChoreForm({
-        ...choreForm,
-        assignedTo: selectedMember?.fullName || '',
-        assignedUserEmail: value,
-      })
-
-      return
-    }
-
     setChoreForm({
       ...choreForm,
       [name]: type === 'checkbox' ? checked : value,
@@ -836,8 +823,7 @@ function Dashboard({ page = 'Overview' }) {
 
     const newChore = {
       title: choreForm.title,
-      assignedTo: choreForm.assignedTo,
-      assignedUserEmail: choreForm.assignedUserEmail,
+      assignedToMemberId: choreForm.assignedToMemberId ? Number(choreForm.assignedToMemberId) : null,
       category: choreForm.category,
       dueDate: choreForm.dueDate,
       isCompleted: choreForm.isCompleted,
@@ -1177,7 +1163,7 @@ function Dashboard({ page = 'Overview' }) {
                             {!notification.isRead && <span>New</span>}
                           </div>
                           <p>{notification.message}</p>
-                          <small>{notification.type} · {formatNotificationTime(notification.createdAt)}</small>
+                          <small>{notification.type} · {formatNotificationTime(notification.CreatedDate)}</small>
                           <div className="notification-actions">
                             {!notification.isRead && (
                               <button type="button" onClick={() => handleMarkNotificationAsRead(notification.id)}>
@@ -1654,19 +1640,17 @@ function Dashboard({ page = 'Overview' }) {
                       <span>Title</span>
                       <input id="choreTitle" name="title" value={choreForm.title} onChange={handleChoreFormChange} required />
                     </label>
-                    <label className="form-field" htmlFor="assignedUserEmail">
+                    <label className="form-field" htmlFor="assignedToMemberId">
                       <span>Assigned To</span>
                       <select
-                        id="assignedUserEmail"
-                        name="assignedUserEmail"
-                        value={choreForm.assignedUserEmail}
+                        id="assignedToMemberId"
+                        name="assignedToMemberId"
+                        value={choreForm.assignedToMemberId}
                         onChange={handleChoreFormChange}
-                        disabled={householdMembers.length === 0}
-                        required
                       >
-                        <option value="">Select household member</option>
+                        <option value="">Unassigned</option>
                         {householdMembers.map((member) => (
-                          <option key={member.id} value={member.email}>
+                          <option key={member.id} value={member.id}>
                             {member.fullName} · {member.email}
                           </option>
                         ))}
@@ -1694,7 +1678,7 @@ function Dashboard({ page = 'Overview' }) {
                     <span>Mark as completed</span>
                   </label>
                   {householdMembers.length === 0 && (
-                    <p className="empty-state">Add household members in Settings before assigning chores.</p>
+                    <p className="empty-state">You can create this chore unassigned, or add household members in Settings first.</p>
                   )}
                   <button className="primary-button" type="submit" disabled={isSubmittingChore}>
                     {isSubmittingChore ? 'Creating...' : 'Create Chore'}
@@ -1722,7 +1706,7 @@ function Dashboard({ page = 'Overview' }) {
                         <div className="row-main">
                           <h4>{chore.title}</h4>
                           <p>
-                            {chore.assignedTo || chore.assignedUserEmail || 'Unassigned'}{chore.assignedUserEmail ? ` · ${chore.assignedUserEmail}` : ''} · {chore.category} · Due {formatDate(chore.dueDate)}
+                            {chore.assignedMemberName || chore.assignedTo || 'Unassigned'}{chore.assignedMemberEmail ? ` · ${chore.assignedMemberEmail}` : ''} · {chore.category} · Due {formatDate(chore.dueDate)}
                           </p>
                         </div>
                         <span className={chore.isCompleted ? 'status paid' : 'status unpaid'}>
