@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Hearth.Api.Data;
+using Hearth.Api.DTOs;
 using Hearth.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ public class HouseholdMembersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<HouseholdMember>>> GetHouseholdMembers()
+    public async Task<ActionResult<IEnumerable<HouseholdMemberResponse>>> GetHouseholdMembers()
     {
         var userId = GetCurrentUserId();
 
@@ -32,6 +33,13 @@ public class HouseholdMembersController : ControllerBase
         var householdMembers = await _context.HouseholdMembers
             .Where(member => member.UserId == userId)
             .OrderBy(member => member.FullName)
+            .Select(member => new HouseholdMemberResponse
+            {
+                Id = member.Id,
+                FullName = member.FullName,
+                Email = member.Email,
+                Role = member.Role
+            })
             .ToListAsync();
 
         return Ok(householdMembers);

@@ -1678,7 +1678,7 @@ function Dashboard({ page = 'Overview' }) {
                     <span>Mark as completed</span>
                   </label>
                   {householdMembers.length === 0 && (
-                    <p className="empty-state">You can create this chore unassigned, or add household members in Settings first.</p>
+                    <p className="empty-state">No household members yet. Add members from Household Members section.</p>
                   )}
                   <button className="primary-button" type="submit" disabled={isSubmittingChore}>
                     {isSubmittingChore ? 'Creating...' : 'Create Chore'}
